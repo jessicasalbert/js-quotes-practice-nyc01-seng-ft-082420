@@ -45,7 +45,6 @@ function submitHander() {
             quote : form.quote.value,
             author : form.author.value,
         }
-        console.log(quoteBody)
         const options = {
             method: "POST",
             headers: {
@@ -68,6 +67,27 @@ function buttonHandler() {
             fetch(`http://localhost:3000/quotes/${e.target.dataset.id}`, {method:"DELETE"})
             .then(res => res.json())
             .then(e.target.parentElement.parentElement.remove())
+        } else if (e.target.matches(".btn-success")) {
+            //console.log(e.target.dataset.id)
+            const options = {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json",
+                    "accept":"application/json"
+                },
+                body: JSON.stringify({
+                    quoteId: parseInt(e.target.dataset.id),
+                    createdAt: Math.round((new Date()).getTime() / 1000)
+                })
+            }
+            fetch(`http://localhost:3000/likes`, options)
+            .then( res => res.json())
+            .then( res => {
+                console.log(e.target.textContent)
+                let likes = parseInt(e.target.textContent.split(":")[1])
+                console.log(likes)
+                e.target.textContent = `Likes: ${likes + 1}`
+            })
         }
     })
 }
